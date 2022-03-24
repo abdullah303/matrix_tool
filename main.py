@@ -243,7 +243,7 @@ class CompleteExercisePage(tk.Frame):
         # labelType = tk.Label(self, text="Question Type", font={"Helvetica", 20}, width=25).grid(row=0, column=1, padx=10, pady=10)
         # labelMat1 = tk.Label(self, text="Matrix1", font={"Helvetica", 20}, width=25).grid(row=1, column=1, padx=10, pady=10)
         # labelMat2 = tk.Label(self, text="Matrix2", font={"Helvetica", 20}, width=25).grid(row=1, column=2, padx=10, pady=10)
-        # ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
+        ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
         self.answer = tk.StringVar()
         ansForm = tk.Entry(self, textvariable=self.answer).grid(row=11, column=1)
         buttonANS = tk.Button(self, text="Check Answer", command=lambda: self.checkANS(self.setExercise(variable))).grid(row=12, column=1, padx=10, pady=10)
