@@ -1,6 +1,7 @@
 import tkinter as tk
 import numpy as np
 import pandas as pd
+import os
 
 class MatrixApp(tk.Tk):
     def __init__(self):
@@ -23,7 +24,7 @@ class MatrixApp(tk.Tk):
 
 
         # define frames and pack them
-        for F in (HomePage, CreateExercisePage, CompleteExercisePage, LeaderboardPage, CompleteAddSubMultExercisePage, CompleteEigenvalueExercisePage, CompleteEigenvectorExercisePage, CompleteInvDetExercisePage, CreateAddSubMultExercisePage, CreateEigenvalueExercisePage, CreateEigenvectorExercisePage, CreateInvDetExercisePage):
+        for F in (HomePage, CreateExercisePage, CompleteExercisePage, LeaderboardPage, CreateAddSubMultExercisePage, CreateEigenvalueExercisePage, CreateEigenvectorExercisePage, CreateInvDetExercisePage):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
@@ -70,6 +71,14 @@ class CreateExercisePage(tk.Frame):
         button.grid()
 
 
+
+        self.file_name = "test.csv"
+        file_entry = tk.StringVar()
+        tk.Entry(self, text="Hi", textvariable=file_entry).grid(column=1, row=9)
+        tk.Label(self, text="Enter Filename: ", font={"Helvetica", 20}).grid(column=0, row=9)
+        set_file = tk.Button(self, text="Submit Filename", command=lambda: self.setFileName(file_entry.get()))
+        set_file.grid(column=2, row= 9)
+
         # operation menu
         self.v = tk.StringVar()
         self.operation = ""
@@ -101,6 +110,10 @@ class CreateExercisePage(tk.Frame):
             case ("inverse"|"determinant"):
                 return "CreateInvDetExercisePage"
 
+    def setFileName(self, file_name):
+        self.file_name = file_name
+
+
 
 
 class CreateAddSubMultExercisePage(CreateExercisePage):
@@ -122,7 +135,7 @@ class CreateAddSubMultExercisePage(CreateExercisePage):
 
         question = {"operation": [self.operation], "matrix 1": [np.array2string(npMatrix1)], "matrix 2": [np.array2string(npMatrix2)]}
         dataframe = pd.DataFrame(question)
-        dataframe.to_csv("test.csv", mode="a")
+        dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False)
 
 class CreateInvDetExercisePage(CreateExercisePage):
     def __init__(self, parent, controller):
@@ -137,10 +150,9 @@ class CreateInvDetExercisePage(CreateExercisePage):
     def onSubmit(self):
         npMatrix1 = self.matrix1.get()
 
-
-        question = {"operation": [self.operation], "matrix 1": [np.array2string(npMatrix1)], "matrix 2": []}
+        question = {"operation": [self.operation], "matrix 1": [np.array2string(npMatrix1)], "matrix 2": [""]}
         dataframe = pd.DataFrame(question)
-        dataframe.to_csv("test.csv", mode="a")
+        dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False)
 
 
 class CreateEigenvalueExercisePage(CreateExercisePage):
@@ -184,6 +196,7 @@ class MatrixInput(tk.Frame):
             for column in range(self.columns):
                 index = (row, column)
                 current_row.append(int(self.entry[index].get()))
+                self.entry[index].delete(0, "end")
             result.append(current_row)
         return np.reshape(result, (self.rows, self.columns))
 
@@ -200,64 +213,6 @@ class CompleteExercisePage(tk.Frame):
         button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"))
         button.grid()
 
-
-        # operation menu
-        self.v = tk.StringVar()
-        self.operation = ""
-        operations = {"Addition" : "addition",
-                      "Subtraction" : "subtraction",
-                      "Multiplication" : "multiplication",
-                      "Eigenvalue" : "eigenvalue",
-                      "Eigenvector" : "eigenvector",
-                      "Inverse" : "inverse",
-                      "Determinant" : "determinant"}
-
-        for (text, value) in operations.items():
-            tk.Radiobutton(self, text=text, variable=self.v, value=value, command=lambda: self.controller.show_frame(self.getOperationPage(self.v.get())), indicator=0, background="light blue", width=15).grid(column=0)
-
-
-
-    def getOperationPage(self, operation):
-        self.operation = operation
-
-        label = tk.Label(self, text=self.operation, font={"Helvetica", 20}, width=25)
-        label.grid(row=0, column=6, padx=10, pady=10)
-
-        match operation:
-            case ("addition"|"multiplication"|"subtraction"):
-                return "CompleteAddSubMultExercisePage"
-            case "eigenvalue":
-                return "CompleteEigenvalueExercisePage"
-            case "eigenvector":
-                return "CompleteEigenvectorExercisePage"
-            case ("inverse"|"determinant"):
-                return "CompleteInvDetExercisePage"
-
-
-
-class CompleteAddSubMultExercisePage(CompleteExercisePage):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-
-        
-
-
-class CompleteInvDetExercisePage(CompleteExercisePage):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-
-
-
-
-class CompleteEigenvalueExercisePage(CompleteExercisePage):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-
-
-
-class CompleteEigenvectorExercisePage(CompleteExercisePage):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
 
 
 
