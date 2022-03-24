@@ -245,7 +245,7 @@ class CompleteExercisePage(tk.Frame):
         answer = tk.StringVar()
         ansForm = tk.Entry(self, textvariable=answer).grid(row=11, column=1)
         buttonANS = tk.Button(self, text="Check Answer", command=lambda: checkANS(stringvalue=RBvar.get())).grid(row=12, column=1, padx=10, pady=10)
-        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6], [x7,x8,x9]]").grid(row=13, column=1, padx=10, pady=10)
+        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]").grid(row=13, column=1, padx=10, pady=10)
 
     def setExercise(self, variable):
         self.current_exercise = variable.get()
