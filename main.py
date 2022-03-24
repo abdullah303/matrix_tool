@@ -1,4 +1,4 @@
-from msilib.schema import Class
+
 import tkinter as tk
 import numpy as np
 import pandas as pd
@@ -201,7 +201,10 @@ class MatrixInput(tk.Frame):
             result.append(current_row)
         return np.reshape(result, (self.rows, self.columns))
 
-
+# class DisplayArray(tk.Frame):
+#     def __init__(self, parent, array):
+#         array = np.frombuffer(np.array(array), dtype=)
+        
 
 class CompleteExercisePage(tk.Frame):
     def __init__(self, parent, controller):
@@ -225,14 +228,16 @@ class CompleteExercisePage(tk.Frame):
         menu = tk.OptionMenu(self, variable, *exercises)
         menu.grid()
 
-        button = tk.Button(self, text="select exercise", command=lambda: self.setExercise(variable)).grid()
+        tk.Button(self, text="select exercise", command=lambda: self.setExercise(variable)).grid()
 
     def setExercise(self, variable):
         self.current_exercise = variable.get()
         print(self.current_exercise)
 
 
-
+class DoExercisePage(CompleteExercisePage):
+    def __init__(self, parent, controller):
+        pass
 
 
 class LeaderboardPage(tk.Frame):
