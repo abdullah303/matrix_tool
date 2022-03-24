@@ -3,6 +3,7 @@ from operator import index
 import tkinter as tk
 import numpy as np
 import pandas as pd
+import csv
 import os
 
 class MatrixApp(tk.Tk):
@@ -228,7 +229,6 @@ class CompleteExercisePage(tk.Frame):
 
         self.getExercises()
 
-
     def getExercises(self):
         exercises = os.listdir(os.path.join(os.getcwd(), "exercises"))
         variable = tk.StringVar(self)
@@ -236,9 +236,76 @@ class CompleteExercisePage(tk.Frame):
         menu.grid()
 
         tk.Button(self, text="select exercise", command=lambda: self.setExercise(variable)).grid()
+        tk.Button(self, text="Next Question", command=lambda: self.nextQ()).grid()
+        tk.Button(self, text="Previous Question", command=lambda: self.previousQ()).grid()
+        # labelType = tk.Label(self, text="Question Type", font={"Helvetica", 20}, width=25).grid(row=0, column=1, padx=10, pady=10)
+        # labelMat1 = tk.Label(self, text="Matrix1", font={"Helvetica", 20}, width=25).grid(row=1, column=1, padx=10, pady=10)
+        # labelMat2 = tk.Label(self, text="Matrix2", font={"Helvetica", 20}, width=25).grid(row=1, column=2, padx=10, pady=10)
+        ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
+        answer = tk.StringVar()
+        ansForm = tk.Entry(self, textvariable=answer).grid(row=11, column=1)
+        buttonANS = tk.Button(self, text="Check Answer", command=lambda: checkANS(stringvalue=RBvar.get())).grid(row=12, column=1, padx=10, pady=10)
+        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6], [x7,x8,x9]]").grid(row=13, column=1, padx=10, pady=10)
 
     def setExercise(self, variable):
         self.current_exercise = variable.get()
+        path = os.path.join(os.getcwd(), "exercises", self.current_exercise)
+        df = pd.read_csv(path)
+        print(df.iloc[:,0])
+        # File = open(path)
+        # Reader = csv.reader(File)
+        # Data = list(Reader)
+
+        # list_of_entries = []
+        # for x in list(range(0,len(Data))):
+        #     list_of_entries.append(Data[x][0])
+        # var = tk.StringVar(value = list_of_entries)
+        # listbox1 = tk.Listbox(self, listvariable = var).grid(row=10 , column=0)
+        
+        # def update():
+        #     index = listbox1.curselection()[0]
+        #     print(index)
+        #     return None 
+        # updateListBoxButton = tk.Button(self, text="Update", command=update).grid(row=11, column=0)
+
+        File = open(path)
+        Reader = csv.reader(File)
+        Data = list(Reader)
+        # del(Data[0])
+
+        list_of_entries = []
+        for x in list(range(0,len(Data))):
+            list_of_entries.append(Data[x][0])
+        var = tk.StringVar(value = list_of_entries)
+        listbox1 = tk.Listbox(self, listvariable = var)
+        listbox1.grid(row=10 , column=0)
+
+        def update():
+            index = listbox1.curselection()[0]
+            operationLabel2.config(text = Data[index][0])
+            matrix1Label2.config(text = Data[index][1])
+            countrylabel2.config(text = Data[index][2])
+            # answerlabel2.config(text = Data[index][3])
+            
+            return None
+
+        button1 = tk.Button(self, text="Update", command=update)
+        button1.grid(row=15, column=0)
+
+        operationLabel = tk.Label(self, text="Operation").grid(row=0, column=1,sticky="w")
+        matrix1Label = tk.Label(self, text="Matrix 1").grid(row=2, column=1,sticky="w")
+        matrix2Label = tk.Label(self, text="Matrix 2").grid(row=2, column=2,sticky="w")
+        # answerlabel = tk.Label(self, text="Answer").grid(row=4, column=0,sticky="w")
+
+        operationLabel2 = tk.Label(self, text="")
+        operationLabel2.grid(row=1, column=1,sticky="w")
+        matrix1Label2 = tk.Label(self, text="")
+        matrix1Label2.grid(row=3, column=1,sticky="w")
+        countrylabel2 = tk.Label(self, text="")
+        countrylabel2.grid(row=3, column=2,sticky="w")
+        # answerlabel2 = tk.Label(self, text="")
+        # answerlabel2.grid(row=4, column=1,sticky="w")
+        # print(df)
         print(self.current_exercise)
 
 
