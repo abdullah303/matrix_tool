@@ -47,16 +47,22 @@ class HomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        label = tk.Label(self, text="Home Page", font={"Helvetica", 20})
-        label.pack(pady=0, padx=0)
+        label = tk.Label(self, text="Matrix Learning Tool", font={"Helvetica", 20})
+        label.pack(side="left", fill="x", padx = 100, pady=100)
 
-        button1 = tk.Button(self, text="Go to Create Exercise", command=lambda: controller.show_frame("CreateExercisePage"), padx=50, pady=50)
-        button2 = tk.Button(self, text="Go to Complete Exercise", command=lambda: controller.show_frame("CompleteExercisePage"), padx=50, pady=50)
-        button3 = tk.Button(self, text="Go to Leaderboard", command=lambda: controller.show_frame("LeaderboardPage"), padx=50, pady=50)
+        button1 = tk.Button(self, text="Go to Create Exercise",
+                    command=lambda: controller.show_frame("CreateExercisePage"),
+                    padx= 50, pady = 50)
+        button2 = tk.Button(self, text="Go to Complete Exercise",
+                    command=lambda: controller.show_frame("CompleteExercisePage"),
+                    padx= 50, pady = 50)
+        button3 = tk.Button(self, text="Go to Leaderboard",
+                    command=lambda: controller.show_frame("LeaderboardPage"),
+                    padx= 50, pady = 50) 
 
         button1.pack(fill="none", expand=True)
         button2.pack(fill="none", expand=True)
-        button3.pack(fill="none", expand=True)     
+        button3.pack(fill="none", expand=True)    
 
       
 class CreateExercisePage(tk.Frame):
