@@ -219,6 +219,7 @@ class CompleteExercisePage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.current_exercise = ""
+        self.answer = ""
 
         #header
         label = tk.Label(self, text="Complete Exercise", font={"Helvetica", 20}, width=25)
@@ -228,6 +229,7 @@ class CompleteExercisePage(tk.Frame):
         button.grid()
 
         self.getExercises()
+
 
     def getExercises(self):
         exercises = os.listdir(os.path.join(os.getcwd(), "exercises"))
@@ -241,10 +243,10 @@ class CompleteExercisePage(tk.Frame):
         # labelType = tk.Label(self, text="Question Type", font={"Helvetica", 20}, width=25).grid(row=0, column=1, padx=10, pady=10)
         # labelMat1 = tk.Label(self, text="Matrix1", font={"Helvetica", 20}, width=25).grid(row=1, column=1, padx=10, pady=10)
         # labelMat2 = tk.Label(self, text="Matrix2", font={"Helvetica", 20}, width=25).grid(row=1, column=2, padx=10, pady=10)
-        ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
-        answer = tk.StringVar()
-        ansForm = tk.Entry(self, textvariable=answer).grid(row=11, column=1)
-        buttonANS = tk.Button(self, text="Check Answer", command=lambda: checkANS(stringvalue=RBvar.get())).grid(row=12, column=1, padx=10, pady=10)
+        # ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
+        self.answer = tk.StringVar()
+        ansForm = tk.Entry(self, textvariable=self.answer).grid(row=11, column=1)
+        buttonANS = tk.Button(self, text="Check Answer", command=lambda: self.checkANS(self.setExercise(variable))).grid(row=12, column=1, padx=10, pady=10)
         answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]").grid(row=13, column=1, padx=10, pady=10)
 
     def setExercise(self, variable):
@@ -268,10 +270,10 @@ class CompleteExercisePage(tk.Frame):
             index = listbox1.curselection()[0]
             operationLabel2.config(text = Data[index][0])
             matrix1Label2.config(text = Data[index][1])
-            countrylabel2.config(text = Data[index][2])
+            matrix2Label2.config(text = Data[index][2])
             # answerlabel2.config(text = Data[index][3])
             
-            return None
+            return (index, Data[index][0], Data[index][1], Data[index][2])
 
         button1 = tk.Button(self, text="Update", command=update)
         button1.grid(row=15, column=0)
@@ -285,12 +287,67 @@ class CompleteExercisePage(tk.Frame):
         operationLabel2.grid(row=1, column=1,sticky="w")
         matrix1Label2 = tk.Label(self, text="")
         matrix1Label2.grid(row=3, column=1,sticky="w")
-        countrylabel2 = tk.Label(self, text="")
-        countrylabel2.grid(row=3, column=2,sticky="w")
+        matrix2Label2 = tk.Label(self, text="")
+        matrix2Label2.grid(row=3, column=2,sticky="w")
         # answerlabel2 = tk.Label(self, text="")
         # answerlabel2.grid(row=4, column=1,sticky="w")
         # print(df)
         print(self.current_exercise)
+        return update()
+
+    def checkANS(self, bigtuple):
+        index, DataOperation, matrix1, matrix2 = bigtuple
+        #(index, DataOperation, DataMat1, DataMat2) bigtuple
+        if DataOperation == "addition":
+                    if self.answer.get() == str(np.add(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
+                        print("answer is correct")
+                    else:
+                        print("answer is incorrect")
+                        print(self.answer.get())
+                        print(str(np.add(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""))
+        elif DataOperation == "subtraction":
+            if self.answer.get() == str(np.subtract(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
+                print("answer is correct")
+            else:
+                print("answer is incorrect")
+        elif DataOperation == "multiplication":
+            if self.answer.get() == str(np.multiply(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
+                print("answer is correct")
+            else:
+                print("answer is incorrect")
+        elif DataOperation == "eigenvalue":
+            values, vector = np.linalg.eigh(np.array(matrix1))
+            if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])):
+                print("answer is correct")
+            else:
+                print("answer is incorrect")
+        elif DataOperation == "eigenvector":
+            values, vector = np.linalg.eigh(np.array(matrix1))
+            if self.answer.get() == (str(vector).tolist()).replace(" ", ""):
+                print("answer is correct")
+            else:
+                print("answer is incorrect")
+        elif DataOperation == "inverse":
+            if self.answer.get() == str(np.linalg.inv(np.array(matrix1)).tolist()).replace(" ", ""):
+                print("answer is correct")
+            else:
+                print("answer is incorrect")
+        elif DataOperation == "determinant":
+            if self.answer.get() == (str(determinant(matrix1))):
+                print("answer is correct")
+            else:
+                print("answer is incorrect")
+
+def determinant(matrix):
+    print(matrix)
+    matrix = np.array(matrix)
+    if len(matrix[0]) == len(matrix[:,0]) == 2:
+        return matrix[0][0]*matrix[1][1] - matrix[1][0]*matrix[0][1]
+    elif len(matrix[0]) == len(matrix[:,0]) == 3:
+        det1 = determinant(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
+        det2 = determinant(np.array([[matrix[0][1],matrix[2][1]],[matrix[0][2],matrix[2][2]]]))
+        det3 = determinant(np.array([[matrix[0][1],matrix[1][1]],[matrix[0][2],matrix[1][2]]]))
+        return matrix[0][0]*det1 - matrix[1][0]*det2 + matrix[2][0]*det3
 
 
 class DoExercisePage(CompleteExercisePage):
