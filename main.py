@@ -267,7 +267,10 @@ class CompleteExercisePage(tk.Frame):
         listbox1.grid(row=10 , column=0)
 
         def update():
-            index = listbox1.curselection()[0]
+            try:
+                index = listbox1.curselection()[0]
+            except:
+                index = 0
             operationLabel2.config(text = Data[index][0])
             matrix1Label2.config(text = Data[index][1])
             matrix2Label2.config(text = Data[index][2])
