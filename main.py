@@ -252,22 +252,6 @@ class CompleteExercisePage(tk.Frame):
         path = os.path.join(os.getcwd(), "exercises", self.current_exercise)
         df = pd.read_csv(path)
         print(df.iloc[:,0])
-        # File = open(path)
-        # Reader = csv.reader(File)
-        # Data = list(Reader)
-
-        # list_of_entries = []
-        # for x in list(range(0,len(Data))):
-        #     list_of_entries.append(Data[x][0])
-        # var = tk.StringVar(value = list_of_entries)
-        # listbox1 = tk.Listbox(self, listvariable = var).grid(row=10 , column=0)
-        
-        # def update():
-        #     index = listbox1.curselection()[0]
-        #     print(index)
-        #     return None 
-        # updateListBoxButton = tk.Button(self, text="Update", command=update).grid(row=11, column=0)
-
         File = open(path)
         Reader = csv.reader(File)
         Data = list(Reader)
