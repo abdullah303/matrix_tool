@@ -1,3 +1,4 @@
+from msilib.schema import Class
 import tkinter as tk
 import numpy as np
 import pandas as pd
@@ -201,10 +202,12 @@ class MatrixInput(tk.Frame):
         return np.reshape(result, (self.rows, self.columns))
 
 
+
 class CompleteExercisePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.current_exercise = ""
 
         #header
         label = tk.Label(self, text="Complete Exercise", font={"Helvetica", 20}, width=25)
@@ -213,10 +216,20 @@ class CompleteExercisePage(tk.Frame):
         button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"))
         button.grid()
 
+        self.getExercises()
 
 
+    def getExercises(self):
+        exercises = os.listdir(os.path.join(os.getcwd(), "exercises"))
+        variable = tk.StringVar(self)
+        menu = tk.OptionMenu(self, variable, *exercises)
+        menu.grid()
 
+        button = tk.Button(self, text="select exercise", command=lambda: self.setExercise(variable)).grid()
 
+    def setExercise(self, variable):
+        self.current_exercise = variable.get()
+        print(self.current_exercise)
 
 
 
