@@ -1,0 +1,51 @@
+def checkANS(stringvalue):
+	if stringvalue == "Addition":
+                if answer.get() == str(np.add(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
+                    print("answer is correct")
+                else:
+                    print("answer is incorrect")
+                    print(answer.get())
+                    print(str(np.add(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""))
+            elif stringvalue == "Subtraction":
+                if answer.get() == str(np.subtract(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
+                    print("answer is correct")
+                else:
+                    print("answer is incorrect")
+            elif stringvalue == "Multiplication":
+                if answer.get() == str(np.multiply(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
+                    print("answer is correct")
+                else:
+                    print("answer is incorrect")
+            elif stringvalue == "Eigenvalue":
+                values, vector = np.linalg.eigh(np.array(matrix1))
+                if answer.get() == (str(values[0])) or answer.get() == (str(values[1])):
+                    print("answer is correct")
+                else:
+                    print("answer is incorrect")
+            elif stringvalue == "Eigenvector":
+                values, vector = np.linalg.eigh(np.array(matrix1))
+                if answer.get() == (str(vector).tolist()).replace(" ", ""):
+                    print("answer is correct")
+                else:
+                    print("answer is incorrect")
+            elif stringvalue == "Inverse":
+                if answer.get() == str(np.linalg.inv(np.array(matrix1)).tolist()).replace(" ", ""):
+                    print("answer is correct")
+                else:
+                    print("answer is incorrect")
+            elif stringvalue == "Determinant":
+                if answer.get() == (str(determinant(matrix1))):
+                    print("answer is correct")
+                else:
+                    print("answer is incorrect")
+
+def determinant(matrix):
+            print(matrix)
+            matrix = np.array(matrix)
+            if len(matrix[0]) == len(matrix[:,0]) == 2:
+                return matrix[0][0]*matrix[1][1] - matrix[1][0]*matrix[0][1]
+            elif len(matrix[0]) == len(matrix[:,0]) == 3:
+                det1 = determinant(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
+                det2 = determinant(np.array([[matrix[0][1],matrix[2][1]],[matrix[0][2],matrix[2][2]]]))
+                det3 = determinant(np.array([[matrix[0][1],matrix[1][1]],[matrix[0][2],matrix[1][2]]]))
+                return matrix[0][0]*det1 - matrix[1][0]*det2 + matrix[2][0]*det3
