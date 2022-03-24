@@ -238,8 +238,8 @@ class CompleteExercisePage(tk.Frame):
         menu.grid()
 
         tk.Button(self, text="select exercise", command=lambda: self.setExercise(variable)).grid()
-        tk.Button(self, text="Next Question", command=lambda: self.nextQ()).grid()
-        tk.Button(self, text="Previous Question", command=lambda: self.previousQ()).grid()
+        # tk.Button(self, text="Next Question", command=lambda: self.nextQ()).grid()
+        # tk.Button(self, text="Previous Question", command=lambda: self.previousQ()).grid()
         # labelType = tk.Label(self, text="Question Type", font={"Helvetica", 20}, width=25).grid(row=0, column=1, padx=10, pady=10)
         # labelMat1 = tk.Label(self, text="Matrix1", font={"Helvetica", 20}, width=25).grid(row=1, column=1, padx=10, pady=10)
         # labelMat2 = tk.Label(self, text="Matrix2", font={"Helvetica", 20}, width=25).grid(row=1, column=2, padx=10, pady=10)
