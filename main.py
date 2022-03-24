@@ -1,4 +1,5 @@
 
+from operator import index
 import tkinter as tk
 import numpy as np
 import pandas as pd
@@ -62,7 +63,7 @@ class HomePage(tk.Frame):
 
         button1.pack(fill="none", expand=True)
         button2.pack(fill="none", expand=True)
-        button3.pack(fill="none", expand=True)    
+        button3.pack(fill="none", expand=True) 
 
       
 class CreateExercisePage(tk.Frame):
@@ -142,7 +143,7 @@ class CreateAddSubMultExercisePage(CreateExercisePage):
 
         question = {"operation": [self.operation], "matrix 1": [np.array2string(npMatrix1)], "matrix 2": [np.array2string(npMatrix2)]}
         dataframe = pd.DataFrame(question)
-        dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False)
+        dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False, index=False)
 
 class CreateInvDetExercisePage(CreateExercisePage):
     def __init__(self, parent, controller):
@@ -159,7 +160,7 @@ class CreateInvDetExercisePage(CreateExercisePage):
 
         question = {"operation": [self.operation], "matrix 1": [np.array2string(npMatrix1)], "matrix 2": [""]}
         dataframe = pd.DataFrame(question)
-        dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False)
+        dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False, index=False)
 
 
 class CreateEigenvalueExercisePage(CreateExercisePage):
