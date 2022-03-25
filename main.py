@@ -291,24 +291,33 @@ class CompleteExercisePage(tk.Frame):
 
         except:
             pass
+
+        def correct():
+            tk.Label(self, text="Correct!").grid(column=10, row=10)
+
+        def incorrect():
+            tk.Label(self, text="Inorrect!").grid(column=10, row=10)
         
         match DataOperation:
             case "addition":
-                print("answer is correct") if (answer == np.add(npMatrix1, npMatrix2)).all() else print("answer is incorrect")
+                correct() if (answer == np.add(npMatrix1, npMatrix2)).all() else incorrect()
             case "subtraction":
-                print("answer is correct") if (answer == np.subtract(npMatrix1, npMatrix2)).all() else print("answer is incorrect")
+                correct() if (answer == np.subtract(npMatrix1, npMatrix2)).all() else incorrect()
             case "multiplication":
-                print("answer is correct") if (answer == np.multiply(npMatrix1, npMatrix2)).all() else print("answer is incorrect")
+                correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
             case "eigenvalue":
                 values, vector = np.linalg.eigh(np.reshape(npMatrix1))
-                print("answer is correct") if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else print("answer is incorrect")
+                correct() if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else incorrect()
             case "eigenvector":
                 values, vector = np.linalg.eigh(np.reshape(npMatrix1))
-                print("answer is correct") if self.answer.get() == (str(vector).tolist()).replace(" ", "") else print("answer is incorrect")
+                correct() if self.answer.get() == (str(vector).tolist()).replace(" ", "") else incorrect()
             case "inverse":
-                print("answer is correct") if (answer == np.linalg.inv(npMatrix1)).all() else print("answer is incorrect")
+                correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
             case "determinant":
-                print("answer is correct") if self.answer.get() == (str(determinant(matrix1))) else print("answer is incorrect")
+                correct() if self.answer.get() == (str(determinant(matrix1))) else incorrect()
+
+    def new_method(self):
+        print("answer is correct")
 
 
 def determinant(matrix):
