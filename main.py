@@ -314,10 +314,7 @@ class CompleteExercisePage(tk.Frame):
             correct() if eigenanswer == (values[0]) or eigenanswer == (values[1]) or eigenanswer == (values[2]) else incorrect()
         elif DataOperation == "eigenvector":
             values, vector = np.linalg.eigh(npMatrix1)
-            for x in range(3):
-                for y in range(3):
-                   vector[x][y] = round(vector[x][y],2)
-            correct() if self.answer.get() == str(vector[0].tolist()) or self.answer.get() == str(vector[1].tolist()) or self.answer.get() == str(vector[2].tolist()) else incorrect()
+            correct() if self.answer.get() == (str(vector).tolist()).replace(" ", "") else incorrect()
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
