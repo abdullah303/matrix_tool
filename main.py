@@ -216,16 +216,15 @@ class CompleteExercisePage(tk.Frame):
 
     def getExercises(self):
         exercises = os.listdir(os.path.join(os.getcwd(), "exercises"))
-        variable = tk.StringVar(self)
-        menu = tk.OptionMenu(self, variable, *exercises)
+        self.variable = tk.StringVar(self)
+        menu = tk.OptionMenu(self, self.variable, *exercises)
         menu.grid()
 
-        tk.Button(self, text="select exercise", command=lambda: self.setExercise(variable)).grid()
+        tk.Button(self, text="select exercise", command=lambda: self.setExercise(self.variable)).grid()
 
         ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
         self.answer = tk.StringVar()
         ansForm = tk.Entry(self, textvariable=self.answer).grid(row=11, column=1)
-        buttonANS = tk.Button(self, text="Check Answer", command=lambda: self.checkANS(self.setExercise(variable))).grid(row=12, column=1, padx=10, pady=10)
         answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]").grid(row=13, column=1, padx=10, pady=10)
 
     def setExercise(self, variable):
@@ -234,27 +233,33 @@ class CompleteExercisePage(tk.Frame):
         df = pd.read_csv(path)
         File = open(path)
         Reader = csv.reader(File)
-        Data = list(Reader)
+        self.Data = list(Reader)
         # del(Data[0])
 
         list_of_entries = []
-        for x in list(range(0,len(Data))):
-            list_of_entries.append(Data[x][0])
+        for x in list(range(0,len(self.Data))):
+            list_of_entries.append(self.Data[x][0])
         var = tk.StringVar(value = list_of_entries)
         listbox1 = tk.Listbox(self, listvariable = var)
         listbox1.grid(row=10 , column=0)
 
         def update():
             try:
-                index = listbox1.curselection()[0]
+                self.index = listbox1.curselection()[0]
             except:
-                index = 0
-            operationLabel2.config(text = Data[index][0])
-            matrix1Label2.config(text = np.reshape(ast.literal_eval(Data[index][1]), (3,3)))
-            matrix2Label2.config(text = np.reshape(ast.literal_eval(Data[index][2]), (3,3)))
+                self.index = 0
+            operationLabel2.config(text = self.Data[self.index][0])
+            matrix1Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][1]), (3,3)))
+            matrix2Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][2]), (3,3)))
             # answerlabel2.config(text = Data[index][3])
             
-            return (index, Data[index][0], Data[index][1], Data[index][2])
+        def ans():
+            update()
+            self.bigtuple = (self.index, self.Data[self.index][0], self.Data[self.index][1], self.Data[self.index][2])
+            return self.checkANS(self.bigtuple)
+
+        buttonANS = tk.Button(self, text="Check Answer", command=ans).grid(row=12, column=1, padx=10, pady=10)
+
 
         button1 = tk.Button(self, text="Update", command=update)
         button1.grid(row=15, column=0)
@@ -273,8 +278,8 @@ class CompleteExercisePage(tk.Frame):
         # answerlabel2 = tk.Label(self, text="")
         # answerlabel2.grid(row=4, column=1,sticky="w")
         # print(df)
-        print(self.current_exercise)
         return update()
+        
 
     def checkANS(self, bigtuple):
         index, DataOperation, matrix1, matrix2 = bigtuple
@@ -282,18 +287,18 @@ class CompleteExercisePage(tk.Frame):
         try:
             npMatrix1 = np.reshape(ast.literal_eval(matrix1), (3,3))
             npMatrix2 = np.reshape(ast.literal_eval(matrix2), (3,3))
-        
+            answer = np.reshape(ast.literal_eval(self.answer.get()), (3,3))
+
         except:
             pass
         
-        #data operation needs fixing !!
         match DataOperation:
             case "addition":
-                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.add(npMatrix1, npMatrix2) else print("answer is incorrect")
+                print("answer is correct") if (answer == np.add(npMatrix1, npMatrix2)).all() else print("answer is incorrect")
             case "subtraction":
-                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.subtract(npMatrix1, npMatrix2) else print("answer is incorrect")
+                print("answer is correct") if (answer == np.subtract(npMatrix1, npMatrix2)).all() else print("answer is incorrect")
             case "multiplication":
-                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.multiply(npMatrix1, npMatrix2) else print("answer is incorrect")
+                print("answer is correct") if (answer == np.multiply(npMatrix1, npMatrix2)).all() else print("answer is incorrect")
             case "eigenvalue":
                 values, vector = np.linalg.eigh(np.reshape(npMatrix1))
                 print("answer is correct") if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else print("answer is incorrect")
@@ -301,7 +306,7 @@ class CompleteExercisePage(tk.Frame):
                 values, vector = np.linalg.eigh(np.reshape(npMatrix1))
                 print("answer is correct") if self.answer.get() == (str(vector).tolist()).replace(" ", "") else print("answer is incorrect")
             case "inverse":
-                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.linalg.inv(npMatrix1) else print("answer is incorrect")
+                print("answer is correct") if (answer == np.linalg.inv(npMatrix1)).all() else print("answer is incorrect")
             case "determinant":
                 print("answer is correct") if self.answer.get() == (str(determinant(matrix1))) else print("answer is incorrect")
 
