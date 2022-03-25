@@ -260,7 +260,7 @@ class CompleteExercisePage(tk.Frame):
         ans = tk.Label(self ,text = "Answer:", bg="#AFE3E4").place(x=475, y= 250)
         self.answer = tk.StringVar()
         ansForm = tk.Entry(self, textvariable=self.answer).place(x=525, y= 250)
-        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]\nPut determinant answers in 2.d.p.", bg="#AFE3E4").place(x=450, y= 315)
+        answerFormat = tk.Label(self, text="Give matrix in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]\nPut decimal answers in 2.d.p.\nGive eigenvector in format [x1,x2,x3]", bg="#AFE3E4").place(x=450, y= 315)
 
 
         button1 = tk.Button(self, text="Update", command=update, bg="light blue")
@@ -297,10 +297,10 @@ class CompleteExercisePage(tk.Frame):
 
 
         def correct():
-            tk.Label(self, text="Correct!", bg="#AFE3E4", fg="green").place(x=475, y= 225)
+            tk.Label(self, text="Correct!", width=20, bg="#AFE3E4", fg="green").place(x=475, y= 225)
 
         def incorrect():
-            tk.Label(self, text="Incorrect!", bg="#AFE3E4", fg="red").place(x=475, y= 225)
+            tk.Label(self, text="Incorrect!", width=20, bg="#AFE3E4", fg="red").place(x=475, y= 225)
         
         if DataOperation == "addition":
             correct() if (answer == np.add(npMatrix1, npMatrix2)).all() else incorrect()
@@ -309,15 +309,18 @@ class CompleteExercisePage(tk.Frame):
         elif DataOperation == "multiplication":
             correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
         elif DataOperation == "eigenvalue":
-            values, vector = np.linalg.eigh(np.reshape(npMatrix1))
-            correct() if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else incorrect()
+            values, vector = np.linalg.eigh(npMatrix1)
+            eigenanswer = float(self.answer.get())
+            correct() if eigenanswer == (values[0]) or eigenanswer == (values[1]) or eigenanswer == (values[2]) else incorrect()
         elif DataOperation == "eigenvector":
-            values, vector = np.linalg.eigh(np.reshape(npMatrix1))
-            correct() if self.answer.get() == (str(vector).tolist()).replace(" ", "") else incorrect()
+            values, vector = np.linalg.eigh(npMatrix1)
+            for x in range(3):
+                for y in range(3):
+                   vector[x][y] = round(vector[x][y],2)
+            correct() if self.answer.get() == str(vector[0].tolist()) or self.answer.get() == str(vector[1].tolist()) or self.answer.get() == str(vector[2].tolist()) else incorrect()
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
-            print((str(round(np.linalg.det(npMatrix1), 2))))
             correct() if self.answer.get() == (str(round(np.linalg.det(npMatrix1), 3))) else incorrect()
 
 

@@ -1,3 +1,12 @@
+[[2,2,2],[2,2,2],[2,2,2]]
+
+[[0,0,0],[0,0,0],[0,0,0]]
+
+[[1,0,0],[0,1,0],[0,0,1]]
+
+
+
+
 def checkANS(stringvalue):
 	if stringvalue == "Addition":
                 if answer.get() == str(np.add(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
