@@ -198,16 +198,16 @@ class MatrixInput(tk.Frame):
 
 class CompleteExercisePage(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg="#AFE3E4")
         self.controller = controller
         self.current_exercise = ""
         self.answer = ""
 
         #header
-        label = tk.Label(self, text="Complete Exercise", font={"Helvetica", 20}, width=25)
+        label = tk.Label(self, text="Complete Exercise", font={"Helvetica", 20}, width=25, bg="#AFE3E4")
         label.grid(row=0, column=0, padx=10, pady=10)
 
-        button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"))
+        button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"), bg="light blue")
         button.grid()
 
         self.getExercises()
@@ -249,7 +249,8 @@ class CompleteExercisePage(tk.Frame):
                 self.index = 0
             operationLabel2.config(text = self.Data[self.index][0])
             matrix1Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][1]), (3,3)))
-            matrix2Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][2]), (3,3)))
+            if self.Data[self.index][2] != "":
+                matrix2Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][2]), (3,3)))
             # answerlabel2.config(text = Data[index][3])
             
         def ans():
@@ -283,13 +284,15 @@ class CompleteExercisePage(tk.Frame):
     def checkANS(self, bigtuple):
         index, DataOperation, matrix1, matrix2 = bigtuple
 
-        try:
-            npMatrix1 = np.reshape(ast.literal_eval(matrix1), (3,3))
+        if DataOperation == "addition" or DataOperation == "subtraction" or DataOperation == "multiplication":
             npMatrix2 = np.reshape(ast.literal_eval(matrix2), (3,3))
-            answer = np.reshape(ast.literal_eval(self.answer.get()), (3,3))
+        npMatrix1 = np.reshape(ast.literal_eval(matrix1), (3,3))
 
-        except:
-            pass
+        if DataOperation not in ["eigenvalue", "eigenvector", "determinant"]:
+            answer = np.reshape(ast.literal_eval(self.answer.get()), (3,3))
+        else:
+            answer = self.answer.get()
+
 
         def correct():
             tk.Label(self, text="Correct!").grid(column=10, row=10)
@@ -312,23 +315,25 @@ class CompleteExercisePage(tk.Frame):
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
-            correct() if self.answer.get() == (str(determinant(matrix1))) else incorrect()
+            print(determinant(matrix1))
+            correct() if self.answer.get() == (str(determinant(npMatrix1))) else incorrect()
 
-    def new_method(self):
-        print("answer is correct")
+
 
 
 def determinant(matrix):
-    print(matrix)
-    matrix = np.array(matrix)
-    if len(matrix[0]) == len(matrix[:,0]) == 2:
+    matrix = np.reshape(ast.literal_eval(matrix), (3,3))
+    num_rows, num_cols = matrix.shape
+
+    if num_rows == num_cols == 2:
         return matrix[0][0]*matrix[1][1] - matrix[1][0]*matrix[0][1]
-    elif len(matrix[0]) == len(matrix[:,0]) == 3:
+    elif num_rows == num_cols == 3:
+        #print(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
         det1 = determinant(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
         det2 = determinant(np.array([[matrix[0][1],matrix[2][1]],[matrix[0][2],matrix[2][2]]]))
         det3 = determinant(np.array([[matrix[0][1],matrix[1][1]],[matrix[0][2],matrix[1][2]]]))
-        return matrix[0][0]*det1 - matrix[1][0]*det2 + matrix[2][0]*det3
 
+        return matrix[0][0]*det1 - matrix[1][0]*det2 + matrix[2][0]*det3
 
 
 class LeaderboardPage(tk.Frame):
