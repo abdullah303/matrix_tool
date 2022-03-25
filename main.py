@@ -224,7 +224,7 @@ class CompleteExercisePage(tk.Frame):
         ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
         self.answer = tk.StringVar()
         ansForm = tk.Entry(self, textvariable=self.answer).grid(row=11, column=1)
-        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]").grid(row=13, column=1, padx=10, pady=10)
+        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]\nPut determinant answers in 2.d.p.").grid(row=13, column=1, padx=10, pady=10)
 
     def setExercise(self, variable):
         self.current_exercise = variable.get()
@@ -315,25 +315,12 @@ class CompleteExercisePage(tk.Frame):
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
-            print(determinant(matrix1))
-            correct() if self.answer.get() == (str(determinant(npMatrix1))) else incorrect()
+            print((str(round(np.linalg.det(npMatrix1), 2))))
+            correct() if self.answer.get() == (str(round(np.linalg.det(npMatrix1), 3))) else incorrect()
 
 
 
 
-def determinant(matrix):
-    matrix = np.reshape(ast.literal_eval(matrix), (3,3))
-    num_rows, num_cols = matrix.shape
-
-    if num_rows == num_cols == 2:
-        return matrix[0][0]*matrix[1][1] - matrix[1][0]*matrix[0][1]
-    elif num_rows == num_cols == 3:
-        #print(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
-        det1 = determinant(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
-        det2 = determinant(np.array([[matrix[0][1],matrix[2][1]],[matrix[0][2],matrix[2][2]]]))
-        det3 = determinant(np.array([[matrix[0][1],matrix[1][1]],[matrix[0][2],matrix[1][2]]]))
-
-        return matrix[0][0]*det1 - matrix[1][0]*det2 + matrix[2][0]*det3
 
 
 class LeaderboardPage(tk.Frame):
