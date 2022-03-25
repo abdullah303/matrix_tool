@@ -13,12 +13,12 @@ class MatrixApp(tk.Tk):
 
         # initial settings
         self.title("Matrix Learning Tool")
-        self.geometry("1280x720")
+        self.geometry("1000x500")
         self.resizable(True, True)
 
 
         # create a container
-        self.container = tk.Frame(self, bg="#B8D8D8")
+        self.container = tk.Frame(self, bg="#AFE3E4")
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
@@ -48,7 +48,7 @@ class MatrixApp(tk.Tk):
 
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg="#AFE3E4")
 
         label = tk.Label(self, text="Matrix Learning Tool", font={"Helvetica", 20})
         label.pack(side="left", fill="x", padx = 100, pady=100)
@@ -70,11 +70,11 @@ class HomePage(tk.Frame):
       
 class CreateExercisePage(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg="#AFE3E4")
         self.controller = controller
 
         #header
-        label = tk.Label(self, text="Create Exercise", font={"Helvetica", 20}, width=25)
+        label = tk.Label(self, text="Create Exercise", font={"Helvetica", 20}, width=25, bg="#AFE3E4")
         label.grid(row=0, column=0, padx=10, pady=10)
 
         button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"))
@@ -129,11 +129,11 @@ class CreateAddSubMultExercisePage(CreateExercisePage):
         self.matrix1 = MatrixInput(self, 3, 3)
         self.matrix2 = MatrixInput(self, 3, 3)
 
-        self.matrix1.grid(column=6, row=10)
-        self.matrix2.grid(column=11, row=10)
+        self.matrix1.place(x=300, y=200)
+        self.matrix2.place(x=600, y=200)
 
         submit = tk.Button(self, text="Submit", command=self.onSubmit)
-        submit.grid(column= 8, row= 13)
+        submit.place(x=500, y=350)
 
     def onSubmit(self):
         npMatrix1 = self.matrix1.get()
@@ -148,10 +148,10 @@ class CreateInvDetEigenExercisePage(CreateExercisePage):
         super().__init__(parent, controller)
         self.matrix1 = MatrixInput(self, 3, 3)
 
-        self.matrix1.grid(column=6, row=10)
+        self.matrix1.place(x=400, y=200)
 
         submit = tk.Button(self, text="Submit", command=self.onSubmit)
-        submit.grid(column= 8, row= 13)
+        submit.place(x=450, y=350)
 
     def onSubmit(self):
         npMatrix1 = self.matrix1.get()
