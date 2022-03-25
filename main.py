@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import csv
 import os
+import ast
 
 class MatrixApp(tk.Tk):
     def __init__(self):
@@ -27,7 +28,7 @@ class MatrixApp(tk.Tk):
 
 
         # define frames and pack them
-        for F in (HomePage, CreateExercisePage, CompleteExercisePage, LeaderboardPage, CreateAddSubMultExercisePage, CreateEigenvalueExercisePage, CreateEigenvectorExercisePage, CreateInvDetExercisePage):
+        for F in (HomePage, CreateExercisePage, CompleteExercisePage, LeaderboardPage, CreateAddSubMultExercisePage, CreateInvDetEigenExercisePage):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
@@ -112,12 +113,8 @@ class CreateExercisePage(tk.Frame):
         match operation:
             case ("addition"|"multiplication"|"subtraction"):
                 return "CreateAddSubMultExercisePage"
-            case "eigenvalue":
-                return "CreateEigenvalueExercisePage"
-            case "eigenvector":
-                return "CreateEigenvectorExercisePage"
-            case ("inverse"|"determinant"):
-                return "CreateInvDetExercisePage"
+            case ("inverse"|"determinant"|"eigenvalue"|"eigenvector"):
+                return "CreateInvDetEigenExercisePage"
 
     def setFileName(self, file_name):
         self.file_name = file_name
@@ -142,11 +139,11 @@ class CreateAddSubMultExercisePage(CreateExercisePage):
         npMatrix1 = self.matrix1.get()
         npMatrix2 = self.matrix2.get()
 
-        question = {"operation": [self.operation], "matrix 1": [np.array2string(npMatrix1)], "matrix 2": [np.array2string(npMatrix2)]}
+        question = {"operation": [self.operation], "matrix 1": [npMatrix1], "matrix 2": [npMatrix2]}
         dataframe = pd.DataFrame(question)
         dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False, index=False)
 
-class CreateInvDetExercisePage(CreateExercisePage):
+class CreateInvDetEigenExercisePage(CreateExercisePage):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
         self.matrix1 = MatrixInput(self, 3, 3)
@@ -159,20 +156,9 @@ class CreateInvDetExercisePage(CreateExercisePage):
     def onSubmit(self):
         npMatrix1 = self.matrix1.get()
 
-        question = {"operation": [self.operation], "matrix 1": [np.array2string(npMatrix1)], "matrix 2": [""]}
+        question = {"operation": [self.operation], "matrix 1": [npMatrix1], "matrix 2": [""]}
         dataframe = pd.DataFrame(question)
         dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False, index=False)
-
-
-class CreateEigenvalueExercisePage(CreateExercisePage):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-
-
-
-class CreateEigenvectorExercisePage(CreateExercisePage):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
 
 
 
@@ -207,12 +193,9 @@ class MatrixInput(tk.Frame):
                 current_row.append(int(self.entry[index].get()))
                 self.entry[index].delete(0, "end")
             result.append(current_row)
-        return np.reshape(result, (self.rows, self.columns))
+        return result
+        #np.reshape(result, (self.rows, self.columns))
 
-# class DisplayArray(tk.Frame):
-#     def __init__(self, parent, array):
-#         array = np.frombuffer(np.array(array), dtype=)
-        
 
 class CompleteExercisePage(tk.Frame):
     def __init__(self, parent, controller):
@@ -238,11 +221,7 @@ class CompleteExercisePage(tk.Frame):
         menu.grid()
 
         tk.Button(self, text="select exercise", command=lambda: self.setExercise(variable)).grid()
-        # tk.Button(self, text="Next Question", command=lambda: self.nextQ()).grid()
-        # tk.Button(self, text="Previous Question", command=lambda: self.previousQ()).grid()
-        # labelType = tk.Label(self, text="Question Type", font={"Helvetica", 20}, width=25).grid(row=0, column=1, padx=10, pady=10)
-        # labelMat1 = tk.Label(self, text="Matrix1", font={"Helvetica", 20}, width=25).grid(row=1, column=1, padx=10, pady=10)
-        # labelMat2 = tk.Label(self, text="Matrix2", font={"Helvetica", 20}, width=25).grid(row=1, column=2, padx=10, pady=10)
+
         ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
         self.answer = tk.StringVar()
         ansForm = tk.Entry(self, textvariable=self.answer).grid(row=11, column=1)
@@ -253,7 +232,6 @@ class CompleteExercisePage(tk.Frame):
         self.current_exercise = variable.get()
         path = os.path.join(os.getcwd(), "exercises", self.current_exercise)
         df = pd.read_csv(path)
-        print(df.iloc[:,0])
         File = open(path)
         Reader = csv.reader(File)
         Data = list(Reader)
@@ -272,8 +250,8 @@ class CompleteExercisePage(tk.Frame):
             except:
                 index = 0
             operationLabel2.config(text = Data[index][0])
-            matrix1Label2.config(text = Data[index][1])
-            matrix2Label2.config(text = Data[index][2])
+            matrix1Label2.config(text = np.reshape(ast.literal_eval(Data[index][1]), (3,3)))
+            matrix2Label2.config(text = np.reshape(ast.literal_eval(Data[index][2]), (3,3)))
             # answerlabel2.config(text = Data[index][3])
             
             return (index, Data[index][0], Data[index][1], Data[index][2])
@@ -300,46 +278,33 @@ class CompleteExercisePage(tk.Frame):
 
     def checkANS(self, bigtuple):
         index, DataOperation, matrix1, matrix2 = bigtuple
-        #(index, DataOperation, DataMat1, DataMat2) bigtuple
-        if DataOperation == "addition":
-                    if self.answer.get() == str(np.add(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
-                        print("answer is correct")
-                    else:
-                        print("answer is incorrect")
-                        print(self.answer.get())
-                        print(str(np.add(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""))
-        elif DataOperation == "subtraction":
-            if self.answer.get() == str(np.subtract(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
-                print("answer is correct")
-            else:
-                print("answer is incorrect")
-        elif DataOperation == "multiplication":
-            if self.answer.get() == str(np.multiply(np.array(matrix1), np.array(matrix2)).tolist()).replace(" ", ""):
-                print("answer is correct")
-            else:
-                print("answer is incorrect")
-        elif DataOperation == "eigenvalue":
-            values, vector = np.linalg.eigh(np.array(matrix1))
-            if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])):
-                print("answer is correct")
-            else:
-                print("answer is incorrect")
-        elif DataOperation == "eigenvector":
-            values, vector = np.linalg.eigh(np.array(matrix1))
-            if self.answer.get() == (str(vector).tolist()).replace(" ", ""):
-                print("answer is correct")
-            else:
-                print("answer is incorrect")
-        elif DataOperation == "inverse":
-            if self.answer.get() == str(np.linalg.inv(np.array(matrix1)).tolist()).replace(" ", ""):
-                print("answer is correct")
-            else:
-                print("answer is incorrect")
-        elif DataOperation == "determinant":
-            if self.answer.get() == (str(determinant(matrix1))):
-                print("answer is correct")
-            else:
-                print("answer is incorrect")
+
+        try:
+            npMatrix1 = np.reshape(ast.literal_eval(matrix1), (3,3))
+            npMatrix2 = np.reshape(ast.literal_eval(matrix2), (3,3))
+        
+        except:
+            pass
+        
+        #data operation needs fixing !!
+        match DataOperation:
+            case "addition":
+                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.add(npMatrix1, npMatrix2) else print("answer is incorrect")
+            case "subtraction":
+                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.subtract(npMatrix1, npMatrix2) else print("answer is incorrect")
+            case "multiplication":
+                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.multiply(npMatrix1, npMatrix2) else print("answer is incorrect")
+            case "eigenvalue":
+                values, vector = np.linalg.eigh(np.reshape(npMatrix1))
+                print("answer is correct") if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else print("answer is incorrect")
+            case "eigenvector":
+                values, vector = np.linalg.eigh(np.reshape(npMatrix1))
+                print("answer is correct") if self.answer.get() == (str(vector).tolist()).replace(" ", "") else print("answer is incorrect")
+            case "inverse":
+                print("answer is correct") if np.reshape(ast.literal_eval(self.answer.get()), 3, 3) == np.linalg.inv(npMatrix1) else print("answer is incorrect")
+            case "determinant":
+                print("answer is correct") if self.answer.get() == (str(determinant(matrix1))) else print("answer is incorrect")
+
 
 def determinant(matrix):
     print(matrix)
@@ -352,10 +317,6 @@ def determinant(matrix):
         det3 = determinant(np.array([[matrix[0][1],matrix[1][1]],[matrix[0][2],matrix[1][2]]]))
         return matrix[0][0]*det1 - matrix[1][0]*det2 + matrix[2][0]*det3
 
-
-class DoExercisePage(CompleteExercisePage):
-    def __init__(self, parent, controller):
-        pass
 
 
 class LeaderboardPage(tk.Frame):
