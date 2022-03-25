@@ -7,6 +7,8 @@ import csv
 import os
 import ast
 
+from pip import List
+
 class MatrixApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -312,8 +314,8 @@ class CompleteExercisePage(tk.Frame):
             correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
         elif DataOperation == "eigenvalue":
             values, vector = np.linalg.eigh(npMatrix1)
-            eigenanswer = float(self.answer.get())
-            correct() if eigenanswer == (values[0]) or eigenanswer == (values[1]) or eigenanswer == (values[2]) else incorrect()
+            eigenanswer = [float(i) for i in ast.literal_eval(self.answer.get())]
+            correct() if str(eigenanswer) == str(list(values)) else incorrect()
         elif DataOperation == "eigenvector":
             values, vector = np.linalg.eigh(npMatrix1)
             for x in range(3):
