@@ -249,6 +249,8 @@ class CompleteExercisePage(tk.Frame):
             matrix1Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][1]), (3,3)))
             if self.Data[self.index][2] != "":
                 matrix2Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][2]), (3,3)))
+            else:
+                matrix2Label2.config(text = "")
             # answerlabel2.config(text = Data[index][3])
             
         def ans():
