@@ -298,7 +298,7 @@ class CompleteExercisePage(tk.Frame):
             tk.Label(self, text="Correct!").grid(column=10, row=10)
 
         def incorrect():
-            tk.Label(self, text="Inorrect!").grid(column=10, row=10)
+            tk.Label(self, text="Incorrect!").grid(column=10, row=10)
         
         if DataOperation == "addition":
             correct() if (answer == np.add(npMatrix1, npMatrix2)).all() else incorrect()
@@ -307,27 +307,34 @@ class CompleteExercisePage(tk.Frame):
         elif DataOperation == "multiplication":
             correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
         elif DataOperation == "eigenvalue":
-            values, vector = np.linalg.eigh(np.reshape(npMatrix1))
-            correct() if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else incorrect()
+            values, vector = np.linalg.eigh(npMatrix1)
+            print("our answer",self.answer.get())
+            print("calculated answer",values)
+            eigenanswer = float(self.answer.get())
+            correct() if eigenanswer == (values[0]) or eigenanswer == (values[1]) or eigenanswer == (values[2]) else incorrect()
         elif DataOperation == "eigenvector":
-            values, vector = np.linalg.eigh(np.reshape(npMatrix1))
+            values, vector = np.linalg.eigh(npMatrix1)
+            print("our answer",self.answer.get())
+            print("calculated answer",(vector).tolist())
             correct() if self.answer.get() == (str(vector).tolist()).replace(" ", "") else incorrect()
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
-            print(determinant(matrix1))
+            print("determinant of matrix 1",determinant(npMatrix1))
             correct() if self.answer.get() == (str(determinant(npMatrix1))) else incorrect()
 
 
 
 
 def determinant(matrix):
-    matrix = np.reshape(ast.literal_eval(matrix), (3,3))
+    print("matrix",matrix)
     num_rows, num_cols = matrix.shape
 
     if num_rows == num_cols == 2:
+        matrix = np.reshape(ast.literal_eval(matrix), (2,2))
         return matrix[0][0]*matrix[1][1] - matrix[1][0]*matrix[0][1]
     elif num_rows == num_cols == 3:
+        matrix = np.reshape(ast.literal_eval(matrix), (3,3))
         #print(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
         det1 = determinant(np.array([[matrix[1][1],matrix[2][1]],[matrix[1][2],matrix[2][2]]]))
         det2 = determinant(np.array([[matrix[0][1],matrix[2][1]],[matrix[0][2],matrix[2][2]]]))
