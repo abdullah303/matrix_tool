@@ -50,16 +50,16 @@ class HomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#AFE3E4")
 
-        label = tk.Label(self, text="Matrix Learning Tool", font={"Helvetica", 20})
+        label = tk.Label(self, text="Matrix Learning Tool", font={"Helvetica", 20}, bg="#AFE3E4")
         label.pack(side="left", fill="x", padx = 100, pady=100)
 
-        button1 = tk.Button(self, text="Go to Create Exercise",
+        button1 = tk.Button(self, text="Go to Create Exercise", bg="light blue",
                     command=lambda: controller.show_frame("CreateExercisePage"),
                     padx= 50, pady = 50)
-        button2 = tk.Button(self, text="Go to Complete Exercise",
+        button2 = tk.Button(self, text="Go to Complete Exercise", bg="light blue",
                     command=lambda: controller.show_frame("CompleteExercisePage"),
                     padx= 50, pady = 50)
-        button3 = tk.Button(self, text="Go to Leaderboard",
+        button3 = tk.Button(self, text="Go to Leaderboard", bg="light blue",
                     command=lambda: controller.show_frame("LeaderboardPage"),
                     padx= 50, pady = 50) 
 
@@ -74,20 +74,20 @@ class CreateExercisePage(tk.Frame):
         self.controller = controller
 
         #header
-        label = tk.Label(self, text="Create Exercise", font={"Helvetica", 20}, width=25, bg="#AFE3E4")
+        label = tk.Label(self, text="Create Exercise", font={"Helvetica", 20, "bold"}, width=25, bg="#AFE3E4")
         label.grid(row=0, column=0, padx=10, pady=10)
 
-        button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"))
+        button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"), bg="light blue")
         button.grid()
 
 
 
         self.file_name = "test.csv"
         file_entry = tk.StringVar()
-        tk.Entry(self, text="Hi", textvariable=file_entry).grid(column=1, row=9)
-        tk.Label(self, text="Enter Filename: ", font={"Helvetica", 20}).grid(column=0, row=9)
-        set_file = tk.Button(self, text="Submit Filename", command=lambda: self.setFileName(file_entry.get()))
-        set_file.grid(column=2, row= 9)
+        tk.Entry(self, text="Hi", textvariable=file_entry).place(x=450, y=75)
+        tk.Label(self, text="Enter Filename: ", font={"Helvetica", 20},  bg="#AFE3E4").place(x=450, y=50)
+        set_file = tk.Button(self, text="Submit Filename", command=lambda: self.setFileName(file_entry.get()), width=15, padx=10)
+        set_file.place(x=600, y=75)
 
         # operation menu
         self.v = tk.StringVar()
@@ -101,14 +101,14 @@ class CreateExercisePage(tk.Frame):
                       "Determinant" : "determinant"}
 
         for (text, value) in operations.items():
-            tk.Radiobutton(self, text=text, variable=self.v, value=value, command=lambda: self.controller.show_frame(self.getOperationPage(self.v.get())), indicator=0, background="light blue", width=15).grid(column=0)
+            tk.Radiobutton(self, text=text, variable=self.v, value=value, command=lambda: self.controller.show_frame(self.getOperationPage(self.v.get())), indicator=0, background="light blue", width=15).grid(column=0, pady=10)
 
 
     def getOperationPage(self, operation):
         self.operation = operation
 
-        label = tk.Label(self, text=self.operation, font={"Helvetica", 20}, width=25)
-        label.grid(row=0, column=6, padx=10, pady=10)
+        label = tk.Label(self, text=self.operation.title(), font={"Helvetica", 20, "bold"}, width=25, bg="#AFE3E4")
+        label.place(x=450, y=10)
 
         match operation:
             case ("addition"|"multiplication"|"subtraction"):
@@ -129,11 +129,11 @@ class CreateAddSubMultExercisePage(CreateExercisePage):
         self.matrix1 = MatrixInput(self, 3, 3)
         self.matrix2 = MatrixInput(self, 3, 3)
 
-        self.matrix1.place(x=300, y=200)
-        self.matrix2.place(x=600, y=200)
+        self.matrix1.place(x=350, y=200)
+        self.matrix2.place(x=650, y=200)
 
         submit = tk.Button(self, text="Submit", command=self.onSubmit)
-        submit.place(x=500, y=350)
+        submit.place(x=550, y=350)
 
     def onSubmit(self):
         npMatrix1 = self.matrix1.get()
@@ -148,10 +148,10 @@ class CreateInvDetEigenExercisePage(CreateExercisePage):
         super().__init__(parent, controller)
         self.matrix1 = MatrixInput(self, 3, 3)
 
-        self.matrix1.place(x=400, y=200)
+        self.matrix1.place(x=450, y=200)
 
         submit = tk.Button(self, text="Submit", command=self.onSubmit)
-        submit.place(x=450, y=350)
+        submit.place(x=500, y=350)
 
     def onSubmit(self):
         npMatrix1 = self.matrix1.get()
