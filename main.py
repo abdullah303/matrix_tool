@@ -1,4 +1,3 @@
-
 from operator import index
 import tkinter as tk
 import numpy as np
@@ -6,48 +5,33 @@ import pandas as pd
 import csv
 import os
 import ast
-
 from pip import List
-
 class MatrixApp(tk.Tk):
     def __init__(self):
         super().__init__()
-
         # initial settings
         self.title("Matrix Learning Tool")
         self.geometry("1000x500")
         self.resizable(True, True)
-
-
         # create a container
         self.container = tk.Frame(self, bg="#AFE3E4")
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
-
         # initialise frames
         self.frames = {}
-
-
         # define frames and pack them
-        for F in (HomePage, CreateExercisePage, CompleteExercisePage, CreateAddSubMultExercisePage, CreateInvDetEigenExercisePage):
+        for F in (HomePage, CreateExercisePage, CompleteExercisePage, CreateAddSubMultExercisePage, CreateInvDetEigenExercisePage, CreditsPage):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
-
         self.show_frame("HomePage")
 
     
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
-
-
-
-
-
-
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#AFE3E4")
@@ -61,8 +45,8 @@ class HomePage(tk.Frame):
         button2 = tk.Button(self, text="Go to Complete Exercise", bg="light blue",
                     command=lambda: controller.show_frame("CompleteExercisePage"),
                     padx= 50, pady = 50)
-        button3 = tk.Button(self, text="Go to Leaderboard", bg="light blue",
-                    command=lambda: controller.show_frame("LeaderboardPage"),
+        button3 = tk.Button(self, text="Go to Credits", bg="light blue",
+                    command=lambda: controller.show_frame("CreditsPage"),
                     padx= 50, pady = 50) 
 
         button1.pack(fill="none", expand=True)
@@ -81,9 +65,7 @@ class CreateExercisePage(tk.Frame):
 
         button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"), bg="light blue")
         button.grid()
-
-
-
+        
         self.file_name = "test.csv"
         file_entry = tk.StringVar()
         tk.Entry(self, text="Hi", textvariable=file_entry).place(x=450, y=75)
@@ -119,9 +101,6 @@ class CreateExercisePage(tk.Frame):
 
     def setFileName(self, file_name):
         self.file_name = file_name
-
-
-
 
 class CreateAddSubMultExercisePage(CreateExercisePage):
     def __init__(self, parent, controller):
@@ -160,11 +139,6 @@ class CreateInvDetEigenExercisePage(CreateExercisePage):
         question = {"operation": [self.operation], "matrix 1": [npMatrix1], "matrix 2": [""]}
         dataframe = pd.DataFrame(question)
         dataframe.to_csv(os.path.join(os.getcwd(), "exercises", self.file_name), mode="a", header=False, index=False)
-
-
-
-
-
 class MatrixInput(tk.Frame):
     def __init__(self, parent, rows, columns):
         tk.Frame.__init__(self, parent)
@@ -195,7 +169,6 @@ class MatrixInput(tk.Frame):
                 self.entry[index].delete(0, "end")
             result.append(current_row)
         return result
-        #np.reshape(result, (self.rows, self.columns))
 
 
 class CompleteExercisePage(tk.Frame):
@@ -204,16 +177,12 @@ class CompleteExercisePage(tk.Frame):
         self.controller = controller
         self.current_exercise = ""
         self.answer = ""
-
         #header
         label = tk.Label(self, text="Complete Exercise", font={"Helvetica", 20}, width=25, bg="#AFE3E4")
         label.grid(row=0, column=0, padx=10, pady=10)
-
         button = tk.Button(self, text="Go to the Main Menu", command=lambda: self.controller.show_frame("HomePage"), bg="light blue")
         button.grid()
-
         self.getExercises()
-
 
     def getExercises(self):
         exercises = os.listdir(os.path.join(os.getcwd(), "exercises"))
@@ -224,8 +193,6 @@ class CompleteExercisePage(tk.Frame):
 
         tk.Button(self, text="select exercise", command=lambda: self.setExercise(self.variable), bg="light blue").place(x=50, y=140)
 
-
-
     def setExercise(self, variable):
         self.current_exercise = variable.get()
         path = os.path.join(os.getcwd(), "exercises", self.current_exercise)
@@ -233,7 +200,6 @@ class CompleteExercisePage(tk.Frame):
         File = open(path)
         Reader = csv.reader(File)
         self.Data = list(Reader)
-        # del(Data[0])
 
         list_of_entries = []
         for x in list(range(0,len(self.Data))):
@@ -253,7 +219,6 @@ class CompleteExercisePage(tk.Frame):
                 matrix2Label2.config(text = np.reshape(ast.literal_eval(self.Data[self.index][2]), (3,3)))
             else:
                 matrix2Label2.config(text = "")
-            # answerlabel2.config(text = Data[index][3])
             
         def ans():
             update()
@@ -265,15 +230,12 @@ class CompleteExercisePage(tk.Frame):
         self.answer = tk.StringVar()
         ansForm = tk.Entry(self, textvariable=self.answer).place(x=525, y= 250)
         answerFormat = tk.Label(self, text="Give matrix in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]\nPut decimal answers in 2.d.p.\nGive eigenvector in format [x1,x2,x3]", bg="#AFE3E4").place(x=450, y= 315)
-
-
         button1 = tk.Button(self, text="Update", command=update, bg="light blue")
         button1.place(x=85, y=375)
 
         operationLabel = tk.Label(self, text="Operation: ", bg="#AFE3E4", font={"Helvetica", 20, "bold"}).place(x=225, y=15)
         matrix1Label = tk.Label(self, text="Matrix 1", bg="#AFE3E4", font={"Helvetica", 20, "bold"}, width=20).place(x=350, y=100)
         matrix2Label = tk.Label(self, text="Matrix 2", bg="#AFE3E4", font={"Helvetica", 20, "bold"}, width=20).place(x=650, y=100)
-        # answerlabel = tk.Label(self, text="Answer").grid(row=4, column=0,sticky="w")
 
         operationLabel2 = tk.Label(self, text="", width=10, bg="#AFE3E4", font={"Helvetica", 20, "bold"})
         operationLabel2.place(x=300, y=15)
@@ -281,11 +243,7 @@ class CompleteExercisePage(tk.Frame):
         matrix1Label2.place(x=350, y=125)
         matrix2Label2 = tk.Label(self, text="", width=20, bg="#AFE3E4", font={"Helvetica", 40, "bold"})
         matrix2Label2.place(x=650, y=125)
-        # answerlabel2 = tk.Label(self, text="")
-        # answerlabel2.grid(row=4, column=1,sticky="w")
-        # print(df)
         return update()
-        
 
     def checkANS(self, bigtuple):
         index, DataOperation, matrix1, matrix2 = bigtuple
@@ -298,7 +256,6 @@ class CompleteExercisePage(tk.Frame):
             answer = np.reshape(ast.literal_eval(self.answer.get()), (3,3))
         else:
             answer = self.answer.get()
-
 
         def correct():
             tk.Label(self, text="Correct!", width=20, bg="#AFE3E4", fg="green").place(x=475, y= 225)
@@ -314,8 +271,11 @@ class CompleteExercisePage(tk.Frame):
             correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
         elif DataOperation == "eigenvalue":
             values, vector = np.linalg.eigh(npMatrix1)
-            eigenanswer = [float(i) for i in ast.literal_eval(self.answer.get())]
-            correct() if str(eigenanswer) == str(list(values)) else incorrect()
+            # print("{0:.2f}".format(round(values[2], 2)))
+            # eigenanswer = [float(i) for i in ast.literal_eval(self.answer.get())]
+            eigenanswer = str(self.answer.get())
+            correct() if eigenanswer == ("{0:.2f}".format(round(values[0], 2))) or eigenanswer == ("{0:.2f}".format(round(values[1], 2))) or eigenanswer == ("{0:.2f}".format(round(values[2], 2))) else incorrect()
+            # correct() if str(eigenanswer) == str(list(values)) else incorrect()
         elif DataOperation == "eigenvector":
             values, vector = np.linalg.eigh(npMatrix1)
             for x in range(3):
@@ -326,8 +286,23 @@ class CompleteExercisePage(tk.Frame):
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
             correct() if self.answer.get() == "{0:.2f}".format(round(np.linalg.det(npMatrix1), 2)) else incorrect()
+class CreditsPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, bg="#AFE3E4")
+
+        label = tk.Label(self, text="Matrix Learning Tool", font={"Helvetica", 20}, bg="#AFE3E4")
+        label.pack(side="left", fill="x", padx = 100, pady=100)
+
+        button1 = tk.Label(self, text="Credits\n Made by Group 23", bg="light blue",
+                    padx= 50, pady = 50)
+        button2 = tk.Label(self, text="Made by:\n Abdullah Ahmed\n Omung Bhasin\n Kannan Sekar Annu Radha\n Xi Chen ", bg="light blue",
+                    padx= 50, pady = 50)
 
 
+        button1.pack(fill="none", expand=True)
+        button2.pack(fill="none", expand=True)
+        button = tk.Button(self, text="Go to the Main Menu", command=lambda: controller.show_frame("HomePage"), bg="light blue")
+        button.pack(fill="none", expand=True)
 
 if __name__ == "__main__":
     app = MatrixApp()
