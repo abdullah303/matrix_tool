@@ -110,11 +110,10 @@ class CreateExercisePage(tk.Frame):
         label = tk.Label(self, text=self.operation.title(), font={"Helvetica", 20, "bold"}, width=25, bg="#AFE3E4")
         label.place(x=450, y=10)
 
-        match operation:
-            case ("addition"|"multiplication"|"subtraction"):
-                return "CreateAddSubMultExercisePage"
-            case ("inverse"|"determinant"|"eigenvalue"|"eigenvector"):
-                return "CreateInvDetEigenExercisePage"
+        if operation == "addition" or operation == "multiplication" or operation == "subtraction":
+            return "CreateAddSubMultExercisePage"
+        elif operation == "inverse" or operation == "determinant" or operation == "eigenvalue" or operation == "eigenvector":
+            return "CreateInvDetEigenExercisePage"
 
     def setFileName(self, file_name):
         self.file_name = file_name
@@ -298,23 +297,22 @@ class CompleteExercisePage(tk.Frame):
         def incorrect():
             tk.Label(self, text="Inorrect!").grid(column=10, row=10)
         
-        match DataOperation:
-            case "addition":
-                correct() if (answer == np.add(npMatrix1, npMatrix2)).all() else incorrect()
-            case "subtraction":
-                correct() if (answer == np.subtract(npMatrix1, npMatrix2)).all() else incorrect()
-            case "multiplication":
-                correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
-            case "eigenvalue":
-                values, vector = np.linalg.eigh(np.reshape(npMatrix1))
-                correct() if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else incorrect()
-            case "eigenvector":
-                values, vector = np.linalg.eigh(np.reshape(npMatrix1))
-                correct() if self.answer.get() == (str(vector).tolist()).replace(" ", "") else incorrect()
-            case "inverse":
-                correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
-            case "determinant":
-                correct() if self.answer.get() == (str(determinant(matrix1))) else incorrect()
+        if DataOperation == "addition":
+            correct() if (answer == np.add(npMatrix1, npMatrix2)).all() else incorrect()
+        elif DataOperation == "subtraction":
+            correct() if (answer == np.subtract(npMatrix1, npMatrix2)).all() else incorrect()
+        elif DataOperation == "multiplication":
+            correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
+        elif DataOperation == "eigenvalue":
+            values, vector = np.linalg.eigh(np.reshape(npMatrix1))
+            correct() if self.answer.get() == (str(values[0])) or self.answer.get() == (str(values[1])) else incorrect()
+        elif DataOperation == "eigenvector":
+            values, vector = np.linalg.eigh(np.reshape(npMatrix1))
+            correct() if self.answer.get() == (str(vector).tolist()).replace(" ", "") else incorrect()
+        elif DataOperation == "inverse":
+            correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
+        elif DataOperation == "determinant":
+            correct() if self.answer.get() == (str(determinant(matrix1))) else incorrect()
 
     def new_method(self):
         print("answer is correct")
