@@ -297,10 +297,10 @@ class CompleteExercisePage(tk.Frame):
 
 
         def correct():
-            tk.Label(self, text="Correct!", bg="#AFE3E4", fg="green").place(x=475, y= 225)
+            tk.Label(self, text="Correct!", width=20, bg="#AFE3E4", fg="green").place(x=475, y= 225)
 
         def incorrect():
-            tk.Label(self, text="Incorrect!", bg="#AFE3E4", fg="red").place(x=475, y= 225)
+            tk.Label(self, text="Incorrect!", width=20, bg="#AFE3E4", fg="red").place(x=475, y= 225)
         
         if DataOperation == "addition":
             correct() if (answer == np.add(npMatrix1, npMatrix2)).all() else incorrect()
@@ -310,19 +310,14 @@ class CompleteExercisePage(tk.Frame):
             correct() if (answer == np.multiply(npMatrix1, npMatrix2)).all() else incorrect()
         elif DataOperation == "eigenvalue":
             values, vector = np.linalg.eigh(npMatrix1)
-            print("our answer",self.answer.get())
-            print("calculated answer",values)
             eigenanswer = float(self.answer.get())
             correct() if eigenanswer == (values[0]) or eigenanswer == (values[1]) or eigenanswer == (values[2]) else incorrect()
         elif DataOperation == "eigenvector":
             values, vector = np.linalg.eigh(npMatrix1)
-            print("our answer",self.answer.get())
-            print("calculated answer",(vector).tolist())
             correct() if self.answer.get() == (str(vector).tolist()).replace(" ", "") else incorrect()
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
-            print((str(round(np.linalg.det(npMatrix1), 2))))
             correct() if self.answer.get() == (str(round(np.linalg.det(npMatrix1), 3))) else incorrect()
 
 
