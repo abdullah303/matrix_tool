@@ -28,7 +28,7 @@ class MatrixApp(tk.Tk):
 
 
         # define frames and pack them
-        for F in (HomePage, CreateExercisePage, CompleteExercisePage, LeaderboardPage, CreateAddSubMultExercisePage, CreateInvDetEigenExercisePage):
+        for F in (HomePage, CreateExercisePage, CompleteExercisePage, CreateAddSubMultExercisePage, CreateInvDetEigenExercisePage):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
@@ -217,14 +217,12 @@ class CompleteExercisePage(tk.Frame):
         exercises = os.listdir(os.path.join(os.getcwd(), "exercises"))
         self.variable = tk.StringVar(self)
         menu = tk.OptionMenu(self, self.variable, *exercises)
-        menu.grid()
+        menu.config(bg = "light blue")
+        menu.place(x=50, y=100)
 
-        tk.Button(self, text="select exercise", command=lambda: self.setExercise(self.variable)).grid()
+        tk.Button(self, text="select exercise", command=lambda: self.setExercise(self.variable), bg="light blue").place(x=50, y=140)
 
-        ans = tk.Label(self ,text = "Answer").grid(row = 10,column = 1)
-        self.answer = tk.StringVar()
-        ansForm = tk.Entry(self, textvariable=self.answer).grid(row=11, column=1)
-        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]\nPut determinant answers in 2.d.p.").grid(row=13, column=1, padx=10, pady=10)
+
 
     def setExercise(self, variable):
         self.current_exercise = variable.get()
@@ -240,7 +238,7 @@ class CompleteExercisePage(tk.Frame):
             list_of_entries.append(self.Data[x][0])
         var = tk.StringVar(value = list_of_entries)
         listbox1 = tk.Listbox(self, listvariable = var)
-        listbox1.grid(row=10 , column=0)
+        listbox1.place(x=50, y=200)
 
         def update():
             try:
@@ -258,23 +256,27 @@ class CompleteExercisePage(tk.Frame):
             self.bigtuple = (self.index, self.Data[self.index][0], self.Data[self.index][1], self.Data[self.index][2])
             return self.checkANS(self.bigtuple)
 
-        buttonANS = tk.Button(self, text="Check Answer", command=ans).grid(row=12, column=1, padx=10, pady=10)
+        buttonANS = tk.Button(self, text="Check Answer", command=ans, bg="light blue").place(x=535, y=275)
+        ans = tk.Label(self ,text = "Answer:", bg="#AFE3E4").place(x=475, y= 250)
+        self.answer = tk.StringVar()
+        ansForm = tk.Entry(self, textvariable=self.answer).place(x=525, y= 250)
+        answerFormat = tk.Label(self, text="Give answer in format [[x1,x2,x3],[x4,x5,x6],[x7,x8,x9]]\nPut determinant answers in 2.d.p.", bg="#AFE3E4").place(x=450, y= 315)
 
 
-        button1 = tk.Button(self, text="Update", command=update)
-        button1.grid(row=15, column=0)
+        button1 = tk.Button(self, text="Update", command=update, bg="light blue")
+        button1.place(x=85, y=375)
 
-        operationLabel = tk.Label(self, text="Operation").grid(row=0, column=1,sticky="w")
-        matrix1Label = tk.Label(self, text="Matrix 1").grid(row=2, column=1,sticky="w")
-        matrix2Label = tk.Label(self, text="Matrix 2").grid(row=2, column=2,sticky="w")
+        operationLabel = tk.Label(self, text="Operation: ", bg="#AFE3E4", font={"Helvetica", 20, "bold"}).place(x=225, y=15)
+        matrix1Label = tk.Label(self, text="Matrix 1", bg="#AFE3E4", font={"Helvetica", 20, "bold"}, width=20).place(x=350, y=100)
+        matrix2Label = tk.Label(self, text="Matrix 2", bg="#AFE3E4", font={"Helvetica", 20, "bold"}, width=20).place(x=650, y=100)
         # answerlabel = tk.Label(self, text="Answer").grid(row=4, column=0,sticky="w")
 
-        operationLabel2 = tk.Label(self, text="")
-        operationLabel2.grid(row=1, column=1,sticky="w")
-        matrix1Label2 = tk.Label(self, text="")
-        matrix1Label2.grid(row=3, column=1,sticky="w")
-        matrix2Label2 = tk.Label(self, text="")
-        matrix2Label2.grid(row=3, column=2,sticky="w")
+        operationLabel2 = tk.Label(self, text="", width=10, bg="#AFE3E4", font={"Helvetica", 20, "bold"})
+        operationLabel2.place(x=300, y=15)
+        matrix1Label2 = tk.Label(self, text="", width=20, bg="#AFE3E4", font={"Helvetica", 40, "bold"})
+        matrix1Label2.place(x=350, y=125)
+        matrix2Label2 = tk.Label(self, text="", width=20, bg="#AFE3E4", font={"Helvetica", 40, "bold"})
+        matrix2Label2.place(x=650, y=125)
         # answerlabel2 = tk.Label(self, text="")
         # answerlabel2.grid(row=4, column=1,sticky="w")
         # print(df)
@@ -295,10 +297,10 @@ class CompleteExercisePage(tk.Frame):
 
 
         def correct():
-            tk.Label(self, text="Correct!").grid(column=10, row=10)
+            tk.Label(self, text="Correct!", bg="#AFE3E4", fg="green").place(x=475, y= 225)
 
         def incorrect():
-            tk.Label(self, text="Inorrect!").grid(column=10, row=10)
+            tk.Label(self, text="Incorrect!", bg="#AFE3E4", fg="red").place(x=475, y= 225)
         
         if DataOperation == "addition":
             correct() if (answer == np.add(npMatrix1, npMatrix2)).all() else incorrect()
@@ -319,19 +321,6 @@ class CompleteExercisePage(tk.Frame):
             correct() if self.answer.get() == (str(round(np.linalg.det(npMatrix1), 3))) else incorrect()
 
 
-
-
-
-
-class LeaderboardPage(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-
-        label = tk.Label(self, text="Leaderboard", font={"Helvetica", 20})
-        label.pack(pady=0, padx=0)
-
-        button = tk.Button(self, text="Go to the Main Menu", command=lambda: controller.show_frame("HomePage"))
-        button.pack()
 
 if __name__ == "__main__":
     app = MatrixApp()
