@@ -321,7 +321,7 @@ class CompleteExercisePage(tk.Frame):
             for x in range(3):
                 for y in range(3):
                    vector[x][y] = round(vector[x][y],2)
-            correct() if self.answer.get() == str(vector[0].tolist()) or self.answer.get() == str(vector[1].tolist()) or self.answer.get() == str(vector[2].tolist()) else incorrect()
+            correct() if self.answer.get() == str(vector[0].tolist()).replace('.0,',',').replace(' ','').replace('.0]',']') or self.answer.get() == str(vector[1].tolist()).replace('.0,',',').replace(' ','').replace('.0]',']') or self.answer.get() == str(vector[2].tolist()).replace('.0,',',').replace(' ','').replace('.0]',']') else incorrect()
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
