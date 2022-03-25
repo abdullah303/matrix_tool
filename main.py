@@ -59,13 +59,11 @@ class HomePage(tk.Frame):
         button2 = tk.Button(self, text="Go to Complete Exercise", bg="light blue",
                     command=lambda: controller.show_frame("CompleteExercisePage"),
                     padx= 50, pady = 50)
-        button3 = tk.Button(self, text="Go to Leaderboard", bg="light blue",
-                    command=lambda: controller.show_frame("LeaderboardPage"),
-                    padx= 50, pady = 50) 
+
 
         button1.pack(fill="none", expand=True)
         button2.pack(fill="none", expand=True)
-        button3.pack(fill="none", expand=True) 
+
 
       
 class CreateExercisePage(tk.Frame):
@@ -317,7 +315,6 @@ class CompleteExercisePage(tk.Frame):
         elif DataOperation == "inverse":
             correct() if (answer == np.linalg.inv(npMatrix1)).all() else incorrect()
         elif DataOperation == "determinant":
-            print((str(round(np.linalg.det(npMatrix1), 2))))
             correct() if self.answer.get() == (str(round(np.linalg.det(npMatrix1), 3))) else incorrect()
 
 
